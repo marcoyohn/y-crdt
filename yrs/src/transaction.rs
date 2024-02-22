@@ -593,8 +593,9 @@ impl<'doc> TransactionMut<'doc> {
     /// Remote update integration requires that all to-be-integrated blocks must have their direct
     /// predecessors already in place. Out of order updates from the same peer will be stashed
     /// internally and their integration will be postponed until missing blocks arrive first.
-    pub fn apply_update(&mut self, update: Update) {
+    pub fn apply_update(&mut self, update: Update) -> bool {
         let (remaining, remaining_ds) = update.integrate(self);
+        let has_missing = remaining.is_some() || remaining_ds.is_some();
         let mut retry = false;
         {
             let store = self.store_mut();
@@ -642,9 +643,11 @@ impl<'doc> TransactionMut<'doc> {
                 let mut ds_update = Update::new();
                 ds_update.delete_set = ds;
                 self.apply_update(pending.update);
-                self.apply_update(ds_update)
+                self.apply_update(ds_update);
             }
         }
+
+        has_missing
     }
 
     pub(crate) fn create_item<T: Prelim>(
