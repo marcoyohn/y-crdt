@@ -97,7 +97,7 @@ impl Update {
         Self::default()
     }
 
-    pub(crate) fn is_empty(&self) -> bool {
+    pub fn is_empty(&self) -> bool {
         self.blocks.is_empty() && self.delete_set.is_empty()
     }
 
