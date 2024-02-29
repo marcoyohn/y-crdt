@@ -101,6 +101,14 @@ impl Update {
         self.blocks.is_empty() && self.delete_set.is_empty()
     }
 
+    pub fn is_bocks_empty(&self) -> bool {
+        self.blocks.is_empty()
+    }
+
+    pub fn is_delete_set_empty(&self) -> bool {
+        self.delete_set.is_empty()
+    }
+
     /// Returns a state vector representing an upper bound of client clocks included by blocks
     /// stored in current update.
     pub fn state_vector(&self) -> StateVector {
